@@ -1,43 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Umang's Chatting App</title>
-</head>
-<body>
+    <style>
+      #heading {
+        text-align: center;
+        background-image: linear-gradient(to left, #553c9a, #ee4b2b);
+        color: transparent;
+        background-clip: text;
+        -webkit-background-clip: text;
+        font-size: 28px;
+        font-family: sans-serif;
+        font-weight: 500;
+      }
+      #form {
+        text-align: center;
+        border: 1px solid white;
+        font-size: 28px;
+        font-family: sans-serif;
+        font-weight: 500;
+      }
+      #messages {
+        text-align: center;
+        justify-content: center;
+        justify-items: center;
+      }
+      #messages li {
+        text-align: center;
+        justify-content: center;
+        justify-items: center;
+        font-size: 24px;
+        color: #ee4b2b;
+      }
+      .danger:hover {
+        background-color: #eeeeee;
+        color: crimson;
+      }
+      .danger {
+        background-color: crimson;
+        padding: 8px 20px;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      #input_value {
+        border: 1px solid lightgrey;
+        border-radius: 6px;
+        height: 40px;
+        outline: none;
+        padding: 0px 15px;
+        font-size: 15px;
+        font-family: "Poppins", sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1 id="heading">Todo List</h1>
+    </div>
     <form id="form">
-        <input id="input_value" type="text" autocomplete="off">
-        <input type="submit" value="Send">
+      <input
+        placeholder="todo list"
+        id="input_value"
+        type="text"
+        autocomplete="off"
+      />
+      <input class="danger" type="submit" value="ADD" />
     </form>
-    <div id="messages"></div>
-</body>
+    <ol id="messages"></ol>
+  </body>
 </html>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js" integrity="sha512-HTENHrkQ/P0NGDFd5nk6ibVtCkcM7jhr2c7GyvXp5O+4X6O5cQO9AhqFzM+MdeBivsX7Hoys2J7pp2wdgMpCvw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"
+  integrity="sha512-HTENHrkQ/P0NGDFd5nk6ibVtCkcM7jhr2c7GyvXp5O+4X6O5cQO9AhqFzM+MdeBivsX7Hoys2J7pp2wdgMpCvw=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
 <script>
-    const socket = io();
-    const form = document.getElementById("form");
-    const input = document.getElementById("input_value");
-    const msgs = document.getElementById("messages")
+  const socket = io();
+  console.log(socket);
+  const form = document.getElementById("form");
+  const input = document.getElementById("input_value");
+  const msgs = document.getElementById("messages");
 
+  const fetching_data = async () => {
+    try {
+      const res = await fetch(`http://localhost:8080/fetchAllTasks`);
+      const data = await res.json();
+      display(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    form.addEventListener("submit",(e)=>{
-        e.preventDefault();
-        // const message = input.value;
-       const message = {
-        task:"hello",
-        isCompleted:false
-       }
-        socket.emit("add",message);
-        input.value="";
-    })
+  const fetching_data_1 = async () => {
+    try {
+      const res = await fetch(`http://localhost:8080/fetchAllTasks`);
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    socket.on("add",(msg)=>{
-        console.log("got new message",msg);
-        const div = document.createElement("div");
-        div.innerText = msg;
-        msgs.appendChild(div);
-    })
+  function display(data) {
+    console.log(data);
+    let container = document.getElementById("messages");
+    container.innerHTML = null;
+    data.Todo_list.forEach((el) => {
+      let li = document.createElement("li");
+      li.innerText = el.task;
+      container.append(li);
+    });
+  }
 
+  window.addEventListener("load", (event) => {
+    fetching_data();
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let input_1 = input.value;
+    const message = {
+      task: input_1,
+      isCompleted: false,
+    };
+    socket.emit("add", message);
+    input.value = "";
+  });
+
+  socket.on("add", (msg) => {
+    console.log("got new message", msg);
+    const li = document.createElement("li");
+    li.innerText = msg.task;
+    msgs.appendChild(li);
+  });
 </script>

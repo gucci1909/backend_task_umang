@@ -1,18 +1,19 @@
 import Task_Model from "../models/task.models.js";
 import client from "../config/redis.js";
+// controller of /fetchAllTasks route , here we are getting both databases of redis and mongodb . We are taking redis database as a prior one because first 51 todo's will be added to redis.
 const task_controller = async (req, res) => {
     try {
         let redis_data = await client.get("BACKEND_TASK_UMANG");
-        const mongo_data = await Task_Model.find();
-        redis_data = JSON.parse(redis_data);
-        Array.prototype.push.apply(redis_data, mongo_data);
+        const mongo_data = await Task_Model.find({}, { _id: 0 });
+        redis_data = JSON.parse(redis_data) || [];
+        Array.prototype.push.apply(mongo_data, redis_data);
         res.status(200).json({
-            Todo_list: redis_data
+            Todo_list: mongo_data,
         });
     }
     catch (error) {
         res.status(404).json({
-            error: error
+            error: error,
         });
     }
 };

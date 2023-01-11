@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
 import { createClient } from "redis";
 dotenv.config();
+// making redis URL
 const redisURL = `redis://:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`;
 const client = createClient({ url: redisURL });
 // connecting redis here
