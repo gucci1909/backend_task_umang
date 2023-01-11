@@ -16,5 +16,5 @@ const task_schema = new Schema<Task>({
     }
 })
 
-const Task_Model = model<Task>("Task",task_schema);
+const Task_Model = model<Task>("backend_tasks",task_schema);
 export default Task_Model;

@@ -1,11 +1,10 @@
-import mongoose,{connect} from "mongoose";
+import {connect} from "mongoose";
 
 function connection_mongoose(){
-    return connect(`mongodb://localhost:27017/kazam`).then(()=>{
-        console.log("database connect")
-
+    return connect(`mongodb+srv://umangar34:Umang2000@gucci1909.vhyhdo6.mongodb.net/?retryWrites=true&w=majority/backend_tasks_umang`).then(()=>{
+        console.log("connected");
     }).catch((e:any)=>{
-        console.log(e);
+        console.log("error");
     })
 }
 
