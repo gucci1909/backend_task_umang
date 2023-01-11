@@ -9,6 +9,6 @@ const task_schema = new Schema({
         required: true
     }
 });
-const Task_Model = model("Task", task_schema);
+const Task_Model = model("backend_tasks", task_schema);
 export default Task_Model;
 //# sourceMappingURL=task.models.js.map

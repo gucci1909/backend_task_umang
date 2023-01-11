@@ -9,4 +9,4 @@ function connection_mongoose() {
     });
 }
 export default connection_mongoose;
-//# sourceMappingURL=db.js.map
+//# sourceMappingURL=mongodb.js.map
